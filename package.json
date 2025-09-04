@@ -8,7 +8,10 @@
     "start": "node server.js",
     "dev": "node server.js",
     "build": "echo 'No build step required'",
-    "test": "echo 'No tests specified'"
+    "test": "echo 'No tests specified'",
+    "vercel-build": "echo 'Build complete - serving static files'",
+    "vercel:deploy": "vercel --prod",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "express": "^4.18.2",
