@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactica Arena - Hotseat Multiplayer</title>
+    <link rel="stylesheet" href="css/game.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <h1 class="game-title">Tactica Arena</h1>
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading tactical combat systems...</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="start-screen hidden">
+        <div class="start-content">
+            <h1 class="game-title">Tactica Arena</h1>
+            <h2 class="subtitle">Hotseat Multiplayer</h2>
+            <p class="game-description">
+                Take turns commanding your armies in tactical turn-based combat.
+                Each player controls a team of units with unique abilities and classes.
+            </p>
+            
+            <div class="game-setup">
+                <h3>Game Setup</h3>
+                <div class="setup-options">
+                    <div class="setup-group">
+                        <label for="map-size">Map Size:</label>
+                        <select id="map-size">
+                            <option value="quick">Quick (18x18)</option>
+                            <option value="standard">Standard (24x24)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setup-group">
+                        <label for="player1-name">Player 1 Name:</label>
+                        <input type="text" id="player1-name" value="Player 1" maxlength="20">
+                    </div>
+                    
+                    <div class="setup-group">
+                        <label for="player2-name">Player 2 Name:</label>
+                        <input type="text" id="player2-name" value="Player 2" maxlength="20">
+                    </div>
+                </div>
+                
+                <button id="start-game-btn" class="start-btn">Start Battle</button>
+            </div>
+
+            <div class="controls-info">
+                <h3>Controls</h3>
+                <div class="controls-grid">
+                    <div class="control-item">
+                        <span class="key">Mouse</span>
+                        <span class="action">Select units, move, attack</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">Right Click + Drag</span>
+                        <span class="action">Rotate camera</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">Mouse Wheel</span>
+                        <span class="action">Zoom in/out</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">WASD</span>
+                        <span class="action">Pan camera</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">Space</span>
+                        <span class="action">End turn</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">ESC</span>
+                        <span class="action">Deselect unit</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas" class="game-canvas hidden"></canvas>
+
+    <!-- Game UI Overlay -->
+    <div id="game-ui" class="game-ui hidden">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="current-player">
+                <span id="current-player-name">Player 1</span>'s Turn
+            </div>
+            <div class="turn-counter">
+                Turn <span id="turn-number">1</span>
+            </div>
+            <button id="end-turn-btn" class="end-turn-btn">End Turn</button>
+        </div>
+
+        <!-- Left Panel - Unit Info -->
+        <div class="left-panel">
+            <div id="selected-unit-info" class="unit-info-panel hidden">
+                <h3 class="unit-name" id="unit-name">Unit Name</h3>
+                <div class="unit-class-level">
+                    <span id="unit-class">Class</span> - Level <span id="unit-level">1</span>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="health-bar-container">
+                        <div class="stat-label">Health</div>
+                        <div class="health-bar">
+                            <div class="health-fill" id="health-fill"></div>
+                            <span class="health-text" id="health-text">100/100</span>
+                        </div>
+                    </div>
+
+                    <div class="action-points-container">
+                        <div class="stat-label">Action Points</div>
+                        <div class="ap-display">
+                            <div class="ap-dots" id="ap-dots">
+                                <div class="ap-dot active"></div>
+                                <div class="ap-dot active"></div>
+                                <div class="ap-dot active"></div>
+                            </div>
+                            <span class="ap-text" id="ap-text">3/3</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-name">ATK</span>
+                            <span class="stat-value" id="stat-atk">25</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-name">DEF</span>
+                            <span class="stat-value" id="stat-def">15</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-name">MAG</span>
+                            <span class="stat-value" id="stat-mag">20</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-name">RES</span>
+                            <span class="stat-value" id="stat-res">10</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-name">AGL</span>
+                            <span class="stat-value" id="stat-agl">15</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-name">MOV</span>
+                            <span class="stat-value" id="stat-mov">4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="unit-actions">
+                    <button id="move-btn" class="action-btn">Move (1 AP)</button>
+                    <button id="attack-btn" class="action-btn">Attack (1 AP)</button>
+                    <button id="wait-btn" class="action-btn">Wait</button>
+                </div>
+            </div>
+
+            <div id="combat-preview" class="combat-preview hidden">
+                <h4>Combat Preview</h4>
+                <div class="preview-stats">
+                    <div class="hit-chance">Hit Chance: <span id="hit-chance">75%</span></div>
+                    <div class="damage-range">Damage: <span id="damage-range">12-18</span></div>
+                    <div class="crit-chance">Critical: <span id="crit-chance">5%</span></div>
+                </div>
+                <div class="preview-actions">
+                    <button id="confirm-attack-btn" class="confirm-btn">Confirm Attack</button>
+                    <button id="cancel-attack-btn" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Game Status -->
+        <div class="right-panel">
+            <div class="team-status">
+                <h3>Team Status</h3>
+                <div class="team-section">
+                    <h4 class="team-header team-blue">Team A (Blue)</h4>
+                    <div id="team-a-units" class="team-units"></div>
+                </div>
+                <div class="team-section">
+                    <h4 class="team-header team-red">Team B (Red)</h4>
+                    <div id="team-b-units" class="team-units"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel - Messages -->
+        <div class="bottom-panel">
+            <div id="message-log" class="message-log">
+                <div class="message">Game started! Player 1's turn.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Screen -->
+    <div id="victory-screen" class="victory-screen hidden">
+        <div class="victory-content">
+            <h1 class="victory-title">Victory!</h1>
+            <p class="victory-message" id="victory-message">Player 1 wins!</p>
+            <div class="victory-actions">
+                <button id="play-again-btn" class="victory-btn">Play Again</button>
+                <button id="main-menu-btn" class="victory-btn">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Library (ES6 Module) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.158.0/build/three.module.js"
+        }
+    }
+    </script>
+    
+    <!-- Combat System (ES6 Modules) -->
+    <script type="module" src="js/game.js"></script>
+</body>
+</html>

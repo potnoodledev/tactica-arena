@@ -1,0 +1,27 @@
+{
+  "name": "tactica-arena",
+  "version": "1.0.0",
+  "description": "Competitive turn-based tactics game with Web3 integration",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'No build step required'",
+    "test": "echo 'No tests specified'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "game",
+    "tactics",
+    "three.js",
+    "web3",
+    "multiplayer"
+  ],
+  "author": "Tactica Arena Team",
+  "license": "MIT"
+}
