@@ -8,18 +8,15 @@
   ],
   "routes": [
     {
-      "src": "/health",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/src/combat/(.*)",
-      "dest": "/src/combat/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/server.js"
     }
   ],
+  "functions": {
+    "server.js": {
+      "includeFiles": "public/**,src/**"
+    }
+  },
   "env": {
     "NODE_ENV": "production"
   }

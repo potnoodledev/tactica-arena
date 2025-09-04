@@ -6,7 +6,7 @@
  */
 
 // Import the actual combat system from src/combat
-import { CombatPreview } from '../../../src/combat/index.js';
+import { CombatPreview } from '/src/combat/index.js';
 
 export class CombatIntegration {
     constructor() {
