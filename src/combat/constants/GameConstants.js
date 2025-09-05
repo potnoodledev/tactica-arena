@@ -183,7 +183,9 @@ export const TERRAIN = {
     MOUNTAIN: { moveCost: 3, evasion: 0, cover: 0.5, height: 1 },
     WATER: { moveCost: Infinity, evasion: 0, cover: 0, height: 0 }, // Impassable
     ROAD: { moveCost: 0.5, evasion: 0, cover: 0, height: 0 },
-    RUINS: { moveCost: 2, evasion: 0.05, cover: 1.0, height: 0 }
+    RUINS: { moveCost: 2, evasion: 0.05, cover: 1.0, height: 0 },
+    WALKABLE: { moveCost: 1, evasion: 0, cover: 0, height: 0 }, // Clear walkable terrain
+    BLOCKED: { moveCost: Infinity, evasion: 0, cover: 0, height: 0 } // Blocked impassable terrain
   },
   
   /** Height advantages */

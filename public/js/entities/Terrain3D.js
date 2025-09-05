@@ -66,6 +66,22 @@ export class Terrain3D {
                 moveCost: 2,
                 evasion: 0.05,
                 cover: 1.0
+            },
+            WALKABLE: { 
+                name: 'Walkable', 
+                color: 0x5a8a5a, 
+                height: 0,
+                moveCost: 1,
+                evasion: 0,
+                cover: 0
+            },
+            BLOCKED: { 
+                name: 'Blocked', 
+                color: 0x404040, 
+                height: 0.4,
+                moveCost: Infinity,
+                evasion: 0,
+                cover: 0
             }
         };
         
@@ -166,6 +182,10 @@ export class Terrain3D {
             terrainType = 'ROAD';
         } else if (noise < -0.3 && normalizedDistance > 0.6 && Math.random() > 0.8) {
             terrainType = 'RUINS';
+        } else if (noise > 0.8 && Math.random() > 0.7) {
+            terrainType = 'WALKABLE'; // Clear walkable areas
+        } else if (noise < -0.7 && Math.random() > 0.85) {
+            terrainType = 'BLOCKED'; // Blocked impassable areas
         }
         
         return {
@@ -362,6 +382,14 @@ export class Terrain3D {
                     decoration = this.createGrassClump(worldX, worldZ, tile.height);
                 }
                 break;
+            case 'WALKABLE':
+                if (Math.random() < 0.05) { // Very sparse decorations
+                    decoration = this.createGrassClump(worldX, worldZ, tile.height);
+                }
+                break;
+            case 'BLOCKED':
+                decoration = this.createBlockade(worldX, worldZ, tile.height);
+                break;
         }
         
         if (decoration) {
@@ -449,6 +477,37 @@ export class Terrain3D {
             
             blade.rotation.y = Math.random() * Math.PI * 2;
             group.add(blade);
+        }
+        
+        group.position.set(x, baseHeight, z);
+        return group;
+    }
+
+    createBlockade(x, z, baseHeight) {
+        const group = new THREE.Group();
+        
+        // Create a barrier/blockade structure
+        const barrierGeometry = new THREE.BoxGeometry(0.8, 0.6, 0.2);
+        const barrierMaterial = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        
+        // Main barrier
+        const barrier = new THREE.Mesh(barrierGeometry, barrierMaterial);
+        barrier.position.set(0, 0.3, 0);
+        barrier.rotation.y = Math.random() * Math.PI * 2;
+        barrier.castShadow = true;
+        group.add(barrier);
+        
+        // Add some spikes on top
+        for (let i = 0; i < 3; i++) {
+            const spikeGeometry = new THREE.ConeGeometry(0.05, 0.2, 4);
+            const spike = new THREE.Mesh(spikeGeometry, barrierMaterial);
+            spike.position.set(
+                (i - 1) * 0.25,
+                0.7,
+                (Math.random() - 0.5) * 0.1
+            );
+            spike.castShadow = true;
+            group.add(spike);
         }
         
         group.position.set(x, baseHeight, z);
